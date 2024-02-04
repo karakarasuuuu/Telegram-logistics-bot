@@ -5,6 +5,7 @@ import time
 from PIL import Image # Open image
 from selenium import webdriver # Simulate browser
 from selenium.webdriver.firefox.options import Options # Browser options
+from selenium.webdriver.common.by import By
 
 
 # Permanet link
@@ -19,21 +20,21 @@ if __name__ == "__main__":
     user_input = 'P20244730847'#input('Please enter your code:')
 
     # Open a browser
-    browser = webdriver.Firefox(executable_path='/home/karasu/home/code/logistics-crawler/geckodriver')#, options=option)
+    browser = webdriver.Chrome()
     browser.get(link)
     print('browser opened')    
         
     # Input the code
-    code = browser.find_element_by_name('txtProductNum')
+    code = browser.find_element(By.ID, "txtProductNum")
     code.send_keys(user_input)
     print('code inputted')
 
     # Get validation code
     # OCR: https://ithelp.ithome.com.tw/articles/10227263
-    validation_image = browser.find_element_by_id('ImgVCode')
+    validation_image = browser.find_element(By.ID, 'ImgVCode')
     validation_image.screenshot('v.png')
     time.sleep(1)
-    pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+    pytesseract.pytesseract.tesseract_cmd = "C:\\Users\\wtf81\\Desktop\\711\\Tesseract-OCR\\tesseract.exe"
     img = Image.open('v.png')
     img.show()
     validation_code = pytesseract.image_to_string(img)
@@ -42,11 +43,9 @@ if __name__ == "__main__":
     print(validation_code)
 
     # Input validation code
-    validation = browser.find_element_by_name('tbChkCode')
+    validation = browser.find_element(By.ID, 'tbChkCode')
     
     validation.send_keys(validation_code)
-
-    
 
     # Close the browser
     # browser.quit()
